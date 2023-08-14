@@ -1,0 +1,18 @@
+
+
+
+const getTopics = (req, res, next) => {
+    console.log('in controller 1')
+
+    selectTopics().then((topics) => {
+        res.status(200).send({ topics })
+        console.log('in controller 2')
+    })
+}
+
+
+
+
+
+
+module.exports = { getTopics }
