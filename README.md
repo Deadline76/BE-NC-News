@@ -1,3 +1,4 @@
 # Northcoders News API
 
-For instructions, please head over to [L2C NC News](https://l2c.northcoders.com/courses/be/nc-news).
+-Use 'PGDATABASE=nc_news_test' for connecting to the test database.
+-Use 'PGDATABASE=nc_news' for connecting to the development database.
