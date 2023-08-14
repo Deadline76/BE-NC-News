@@ -1,3 +1,6 @@
 # Northcoders News API
+-Create a .env.test file
+-Use 'PGDATABASE=nc_news_test' for connecting to the test database.
 
-For instructions, please head over to [L2C NC News](https://l2c.northcoders.com/courses/be/nc-news).
+-Create a .env.development file
+-Use 'PGDATABASE=nc_news' for connecting to the development database.
