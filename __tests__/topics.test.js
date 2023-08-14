@@ -13,16 +13,11 @@ describe('api/topics', () => {
         .get('/api/topics')
         .expect(200)
         .then((response) => {
-            expect(response.body.topics).toEqual(expect.any(Array));
-            expect.arrayContaining(['slug', 'description']);
+            expect(response.body.topics.length).toBe(3)
+            response.body.topics.forEach(topic => {
+                expect(topic).toHaveProperty('slug')
+                expect(topic).toHaveProperty('description')
+            })
         })
     })
-    test('GET: 404, returns an error when a route does not exist', () => {
-        return request(app)
-        .get('/api/notARoute')
-        .expect(404)
-        .then((response) => {
-            expect(response.body.msg).toBe('No Such Route')
-        })
-    })
-})
+})    

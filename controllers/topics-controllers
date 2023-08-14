@@ -2,7 +2,6 @@ const { selectTopics } = require('../models/topics.models.js')
 
 
 const getTopics = (req, res, next) => {
-    console.log('in controller 1')
 
     selectTopics()
         .then((topics) => {
