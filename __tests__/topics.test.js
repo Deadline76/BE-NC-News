@@ -17,4 +17,12 @@ describe('api/topics', () => {
             expect.arrayContaining(['slug', 'description']);
         })
     })
+    test('GET: 404, returns an error when a route does not exist', () => {
+        return request(app)
+        .get('/api/notARoute')
+        .expect(404)
+        .then((response) => {
+            expect(response.body.msg).toBe('No Such Route')
+        })
+    })
 })
