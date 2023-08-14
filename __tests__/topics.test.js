@@ -8,7 +8,7 @@ beforeEach(() => seed(topicData));
 afterAll(() => db.end());
 
 describe('api/topics', () => {
-    test.skip('GET: 200, an array of topic objects with properties "slug" and "description"', () => {
+    test('GET: 200, an array of topic objects with properties "slug" and "description"', () => {
         return request(app)
         .get('/api/topics')
         .expect(200)
