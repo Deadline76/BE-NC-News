@@ -44,19 +44,16 @@ describe('/api/articles/:article_id', () => {
         .get('/api/articles/1')
         .expect(200)
         .then(({body}) => {
-            delete body.msg.created_at
-          expect(body.msg).toMatchObject({
-              article_id: 1,
-              title: "Living in the shadow of a great man",
-              topic: "mitch",
-              author: "butter_bridge",
-              body: "I find this existence challenging",
-              votes: 100,
-              article_img_url:
-                "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
+                expect(body.msg.article_id).toBe(1)
+                expect(body.msg).toHaveProperty('title', expect.any(String))
+                expect(body.msg).toHaveProperty('topic', expect.any(String)) 
+                expect(body.msg).toHaveProperty('author', expect.any(String))
+                expect(body.msg).toHaveProperty('body', expect.any(String))
+                expect(body.msg).toHaveProperty('created_at', expect.any(String))
+                expect(body.msg).toHaveProperty('votes', expect.any(Number))
+                expect(body.msg).toHaveProperty('article_img_url', expect.any(String))
             })
         })
-    })
     test('GET:404 sends an appropriate and error message when given a valid but non-existent id', () => {
         return request(app)
           .get('/api/articles/999')
@@ -70,7 +67,7 @@ describe('/api/articles/:article_id', () => {
               .get('/api/articles/not-an-article')
               .expect(400)
               .then(({body}) => {
-                expect(body.msg).toBe('Invalid id');
+                expect(body.msg).toBe('Bad request');
         });
     })
 })

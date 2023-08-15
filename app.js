@@ -18,8 +18,8 @@ app.use((err, req, res, next) => {
 })
 
 app.use((err, req, res, next) => {
-    if (err.status === 400) {
-        res.status(400).send({ msg: err.msg })
+    if (err.status === 400 || err.code === '22P02') {
+        res.status(400).send({ msg: 'Bad request'})
     } else {
         next(err)
     }
