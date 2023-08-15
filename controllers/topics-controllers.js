@@ -1,5 +1,15 @@
-const { selectTopics } = require('../models/topics.models.js')
+const { selectTopics, readEndpoints } = require('../models/topics.models.js')
 
+
+const getEndpoints = (req, res, next) => {
+    console.log('controller 1')
+    readEndpoints ()
+        .then(endpoints => {
+            console.log('controller 2')
+            res.status(200).send(endpoints)
+    })
+    .catch(next)
+}
 
 const getTopics = (req, res, next) => {
 
@@ -15,4 +25,4 @@ const getTopics = (req, res, next) => {
 
 
 
-module.exports = { getTopics }
+module.exports = { getTopics, getEndpoints }
