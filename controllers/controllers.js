@@ -1,4 +1,4 @@
-const { selectTopics, selectArticleById } = require('../models/models.js')
+const { selectTopics, selectArticleById, selectAllArticles } = require('../models/models.js')
 const fs = require('fs').promises
 const path = require('path')
 const endpointsFile = require('../endpoints.json')
@@ -30,8 +30,16 @@ const getArticleById = (req, res, next) => {
     })
 }
 
+const getArticles = (req, res, next) => {
+    const orderBy = 'created_at'
+    console.log('controller 1')
+
+    selectAllArticles(orderBy).then(data => {
+        console.log('controller 2')
+        res.status(200).send({ articles: data })
+    })
+}
 
 
 
-
-module.exports = { getTopics, getEndpoints, getArticleById }
+module.exports = { getTopics, getEndpoints, getArticleById, getArticles }
