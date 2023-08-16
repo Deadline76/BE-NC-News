@@ -71,3 +71,22 @@ describe('/api/articles/:article_id', () => {
         });
     })
 })
+describe('/api/articles/:article_id/comments', () => {
+    test('GET:200 sends an array of comments for a given article_id to the client', () => {
+      return request(app)
+        .get('/api/articles/1/comments')
+        .expect(200)
+        .then(({body}) => {
+            console.log(body)
+            body.msg.forEach((comment) => {
+                expect(comment.article_id).toBe(1)
+                expect(comment).toHaveProperty('comment_id', expect.any(Number))
+                expect(comment).toHaveProperty('votes', expect.any(Number)) 
+                expect(comment).toHaveProperty('created_at', expect.any(String))
+                expect(comment).toHaveProperty('author', expect.any(String))
+                expect(comment).toHaveProperty('body', expect.any(String))
+                })
+            expect(body.msg).toBeSortedBy('created_at', { descending: true })
+        })
+    })
+})
