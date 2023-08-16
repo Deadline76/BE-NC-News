@@ -23,7 +23,7 @@ const selectArticleById = (article_id) => {
     }
 
 const selectAllArticles = (orderBy) => {
-    console.log('model 1')
+    
     return db
         .query(`
             SELECT
