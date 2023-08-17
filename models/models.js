@@ -45,20 +45,17 @@ const selectAllArticles = (orderBy) => {
     })
   }
 
-const checkForArticle = (article_id) => {
-    return db
-        .query(`SELECT * FROM articles WHERE article_id = $1`, [article_id])
-        .then(({rows}) => {
-            if (rows.length === 0) {
-                return Promise.reject({status: 404, msg: 'article does not exist'})
-            }
-        })
-}
+// const checkForArticle = (article_id) => {
+//     return db
+//         .query(`SELECT * FROM articles WHERE article_id = $1`, [article_id])
+//         .then(({rows}) => {
+//             if (rows.length === 0) {
+//                 return Promise.reject({status: 404, msg: 'article does not exist'})
+//             }
+//         })
+// }
 
 const insertComment = (username, body, article_id) => {
-    
-    return checkForArticle(article_id)
-        .then(() => {
 
     return db
         .query(
@@ -68,7 +65,6 @@ const insertComment = (username, body, article_id) => {
              RETURNING *`,
              [username, body, article_id]
         )
-        })
         .then(({rows}) => {
             return rows[0]
         })

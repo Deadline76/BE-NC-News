@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const { getTopics, getEndpoints, getArticleById, getArticles, postCommentToArticle, validatePostComment } = require('./controllers/controllers.js');
+const { getTopics, getEndpoints, getArticleById, getArticles, postCommentToArticle } = require('./controllers/controllers.js');
 
 app.use(express.json())
 
@@ -12,11 +12,11 @@ app.get('/api/articles/:article_id', getArticleById)
 
 app.get('/api/articles', getArticles)
 
-app.post('/api/articles/:article_id/comments', validatePostComment, postCommentToArticle)
+app.post('/api/articles/:article_id/comments', postCommentToArticle)
 
 app.use((err, req, res, next) => {
-    if (err.status === 404) {
-        res.status(404).send({ msg: err.msg })
+    if (err.status === 404 || err.code === '23503') {
+        res.status(404).send({ msg: err.msg || 'Not Found' })
     } else {
         next(err)
     }
