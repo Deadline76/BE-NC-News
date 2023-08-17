@@ -1,4 +1,4 @@
-const { selectTopics, selectArticleById, selectAllArticles } = require('../models/models.js')
+const { selectTopics, selectArticleById, selectAllArticles, insertComment } = require('../models/models.js')
 const fs = require('fs').promises
 const path = require('path')
 const endpointsFile = require('../endpoints.json')
@@ -39,6 +39,18 @@ const getArticles = (req, res, next) => {
     })
 }
 
+const postCommentToArticle = (req, res, next) => {
+    const { username, body} = req.body
+    const {article_id} = req.params
+
+    insertComment(username, body, article_id).then((comment) => {
+        
+        res.status(201).send({ comment })
+        })
+        .catch(err => {
+            next(err)
+        })
+}
 
 
-module.exports = { getTopics, getEndpoints, getArticleById, getArticles }
+module.exports = { getTopics, getEndpoints, getArticleById, getArticles, postCommentToArticle }

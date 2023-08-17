@@ -95,4 +95,38 @@ describe('/api/articles', () => {
       })
     
   })
+describe('POST: api/articles/:article_id/comments', () => {
+    test('POST: 201, inserts new comment for an article into the database and sends back the added comment to the client', () => {
+        const newComment = {
+            username: 'rogersop',
+            body: 'Amazing article!'
+        }
+        return request(app)
+            .post('/api/articles/1/comments')
+            .send(newComment)
+            .expect(201)
+            .then(({body}) => {
+                expect(body.comment).toHaveProperty('comment_id', expect.any(Number))
+                expect(body.comment.body).toBe('Amazing article!') 
+                expect(body.comment.article_id).toBe(1)
+                expect(body.comment.author).toBe('rogersop')
+                expect(body.comment).toHaveProperty('votes', expect.any(Number))
+                expect(body.comment).toHaveProperty('created_at', expect.any(String))
+            })
+    })
+    test('POST:404 responds with an appropriate error message when provided with an valid but non existent article number', () => {
+        const newComment = {
+            username: 'rogersop',
+            body: 'Amazing article!'
+        }
+        return request(app)
+          .post('/api/articles/999/comments')
+          .send(newComment)
+          .expect(404)
+          .then(({body}) => {
+            console.log(body.msg)
+            expect(body.msg).toBe('article does not exist');
+          });
+      });
+})
   

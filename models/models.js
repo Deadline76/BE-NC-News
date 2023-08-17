@@ -45,5 +45,34 @@ const selectAllArticles = (orderBy) => {
     })
   }
 
+const checkForArticle = (article_id) => {
+    return db
+        .query(`SELECT * FROM articles WHERE article_id = $1`, [article_id])
+        .then(({rows}) => {
+            if (rows.length === 0) {
+                return Promise.reject({status: 404, msg: 'article does not exist'})
+            }
+        })
+}
 
-module.exports = { selectTopics, selectArticleById, selectAllArticles }
+const insertComment = (username, body, article_id) => {
+    
+    return checkForArticle(article_id)
+        .then(() => {
+
+    return db
+        .query(
+            `INSERT INTO comments (author, body, article_id)
+             VALUES
+             ($1, $2, $3)
+             RETURNING *`,
+             [username, body, article_id]
+        )
+        })
+        .then(({rows}) => {
+            return rows[0]
+        })
+}
+    
+
+module.exports = { selectTopics, selectArticleById, selectAllArticles, insertComment }
