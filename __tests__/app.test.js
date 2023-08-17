@@ -95,4 +95,46 @@ describe('/api/articles', () => {
       })
     
   })
-  
+  describe('/api/articles/:article_id/comments', () => {
+    test('GET:200 sends an array of comments for a given article_id to the client', () => {
+      return request(app)
+        .get('/api/articles/1/comments')
+        .expect(200)
+        .then(({body}) => {
+            console.log(body)
+            body.msg.forEach((comment) => {
+                expect(comment.article_id).toBe(1)
+                expect(comment).toHaveProperty('comment_id', expect.any(Number))
+                expect(comment).toHaveProperty('votes', expect.any(Number)) 
+                expect(comment).toHaveProperty('created_at', expect.any(String))
+                expect(comment).toHaveProperty('author', expect.any(String))
+                expect(comment).toHaveProperty('body', expect.any(String))
+                })
+            expect(body.msg).toBeSortedBy('created_at', { descending: true })
+        })
+    })
+    test('GET:200 sends an empty array if the article has no comments', () => {
+        return request(app)
+          .get('/api/articles/2/comments')
+          .expect(200)
+          .then(({body}) => {
+              expect(body.msg).toEqual([])
+          })
+      })
+    test('GET:404 sends an appropriate and error message when given a valid but non-existent id', () => {
+        return request(app)
+          .get('/api/articles/999/comments')
+          .expect(404)
+          .then(({body}) => {
+            expect(body.msg).toBe('article does not exist');
+        });
+    })
+    test('GET:400 sends an appropriate and error message when given an invalid id', () => {
+        return request(app)
+          .get('/api/articles/abc/comments')
+          .expect(400)
+          .then(({body}) => {
+            expect(body.msg).toBe('Bad request');
+        });
+    })
+})
