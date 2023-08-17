@@ -71,7 +71,31 @@ describe('/api/articles/:article_id', () => {
         });
     })
 })
-describe('/api/articles/:article_id/comments', () => {
+describe('/api/articles', () => {
+    test('GET:200 sends an articles array of article objects to the client', () => {
+      return request(app)
+        .get('/api/articles')
+        .expect(200)
+        .then(({body}) => {
+          expect(body.articles.length).toBe(13)
+          body.articles.forEach(article => {
+            expect(article).toHaveProperty('author', expect.any(String))
+            expect(article).toHaveProperty('title', expect.any(String))
+            expect(article).toHaveProperty('article_id', expect.any(Number))
+            expect(article).toHaveProperty('topic', expect.any(String))
+            expect(article).toHaveProperty('created_at', expect.any(String))
+            expect(article).toHaveProperty('votes', expect.any(Number))
+            expect(article).toHaveProperty('article_img_url', expect.any(String))
+            expect(article).toHaveProperty('comment_count', expect.any(Number))
+            expect(article).not.toHaveProperty('body')
+  
+          })
+          expect(body.articles).toBeSortedBy('created_at', { descending: true })
+        })
+      })
+    
+  })
+  describe('/api/articles/:article_id/comments', () => {
     test('GET:200 sends an array of comments for a given article_id to the client', () => {
       return request(app)
         .get('/api/articles/1/comments')
