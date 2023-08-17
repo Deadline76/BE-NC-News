@@ -89,6 +89,14 @@ describe('/api/articles/:article_id/comments', () => {
             expect(body.msg).toBeSortedBy('created_at', { descending: true })
         })
     })
+    test('GET:200 sends an empty array if the article has no comments', () => {
+        return request(app)
+          .get('/api/articles/2/comments')
+          .expect(200)
+          .then(({body}) => {
+              expect(body.msg).toEqual([])
+          })
+      })
     test('GET:404 sends an appropriate and error message when given a valid but non-existent id', () => {
         return request(app)
           .get('/api/articles/999/comments')
