@@ -58,10 +58,18 @@ const getArticles = (req, res, next) => {
 const patchArticleVotes = (req, res, next) => {
     const {article_id} = req.params
     const {inc_votes} = req.body
-    console.log('controller 1')
+
+    if(!inc_votes || typeof inc_votes !== 'number' || Object.keys(req.body).length > 1){
+        return res.status(400).send({ msg: 'invalid post object'})
+    }
+
     updateArticleVotes (article_id, inc_votes).then(article => {
         res.status(200).send({article})
     })
+    .catch(err => {
+        next(err)
+      })
+    
 }
 
 

@@ -138,14 +138,13 @@ describe('/api/articles', () => {
     })
 })
 describe('PATCH: /api/articles/:article_id', () => {
-    test.only('PATCH:200 returns an article object with the updated vote count', () => {
+    test('PATCH:200 returns an article object with the updated vote count', () => {
       const voteUpdate = { inc_votes: 5}
       return request(app)
         .patch('/api/articles/1')
         .send(voteUpdate)
         .expect(200)
         .then(({body}) => {
-            console.log(body)
             expect(body.article).toHaveProperty('author', expect.any(String))
             expect(body.article).toHaveProperty('title', expect.any(String))
             expect(body.article.article_id).toBe(1)
@@ -156,4 +155,44 @@ describe('PATCH: /api/articles/:article_id', () => {
             expect(body.article).toHaveProperty('body')
         })
     })
+    test('PATCH:404 responds with an appropriate error message when provided with an valid but non existent article number', () => {
+        const voteUpdate = { inc_votes: 5}
+        return request(app)
+          .patch('/api/articles/999')
+          .send(voteUpdate)
+          .expect(404)
+          .then(({body}) => {
+            expect(body.msg).toBe('article does not exist')
+          })
+      })
+    test('PATCH:400 responds with an appropriate error message when provided with an invalid post object property', () => {
+        const voteUpdate = { votes: 5}
+        return request(app)
+          .patch('/api/articles/1')
+          .send(voteUpdate)
+          .expect(400)
+          .then(({body}) => {
+            expect(body.msg).toBe('invalid post object')
+          })
+      })
+    test('PATCH:400 responds with an appropriate error message when provided with an invalid post object value data type', () => {
+        const voteUpdate = { inc_votes: 'five'}
+        return request(app)
+          .patch('/api/articles/1')
+          .send(voteUpdate)
+          .expect(400)
+          .then(({body}) => {
+            expect(body.msg).toBe('invalid post object')
+          })
+      })
+    test('PATCH:400 responds with an appropriate error message when provided with an invalid post object extra property', () => {
+        const voteUpdate = { inc_votes: 'five', brand: 'nike'}
+        return request(app)
+          .patch('/api/articles/1')
+          .send(voteUpdate)
+          .expect(400)
+          .then(({body}) => {
+            expect(body.msg).toBe('invalid post object')
+          })
+      })
 })
