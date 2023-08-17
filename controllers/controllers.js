@@ -1,4 +1,8 @@
-const { selectTopics, selectArticleById, selectAllArticles, selectCommentsByArticle } = require('../models/models.js')
+const { selectTopics, 
+        selectArticleById, 
+        selectAllArticles, 
+        selectCommentsByArticle, 
+        updateArticleVotes } = require('../models/models.js')
 const endpointsFile = require('../endpoints.json')
 
 
@@ -51,8 +55,20 @@ const getArticles = (req, res, next) => {
     })
 }
 
+const patchArticleVotes = (req, res, next) => {
+    const {article_id} = req.params
+    const {inc_votes} = req.body
+    console.log('controller 1')
+    updateArticleVotes (article_id, inc_votes).then(article => {
+        res.status(200).send({article})
+    })
+}
 
 
-
-module.exports = { getTopics, getEndpoints, getArticleById, getArticles, getCommentsByArticle }
+module.exports = { getTopics, 
+                   getEndpoints, 
+                   getArticleById, 
+                   getArticles, 
+                   getCommentsByArticle, 
+                   patchArticleVotes }
 

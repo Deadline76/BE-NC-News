@@ -101,7 +101,6 @@ describe('/api/articles', () => {
         .get('/api/articles/1/comments')
         .expect(200)
         .then(({body}) => {
-            console.log(body)
             body.msg.forEach((comment) => {
                 expect(comment.article_id).toBe(1)
                 expect(comment).toHaveProperty('comment_id', expect.any(Number))
@@ -136,5 +135,25 @@ describe('/api/articles', () => {
           .then(({body}) => {
             expect(body.msg).toBe('Bad request');
         });
+    })
+})
+describe('PATCH: /api/articles/:article_id', () => {
+    test.only('PATCH:200 returns an article object with the updated vote count', () => {
+      const voteUpdate = { inc_votes: 5}
+      return request(app)
+        .patch('/api/articles/1')
+        .send(voteUpdate)
+        .expect(200)
+        .then(({body}) => {
+            console.log(body)
+            expect(body.article).toHaveProperty('author', expect.any(String))
+            expect(body.article).toHaveProperty('title', expect.any(String))
+            expect(body.article.article_id).toBe(1)
+            expect(body.article).toHaveProperty('topic', expect.any(String))
+            expect(body.article).toHaveProperty('created_at', expect.any(String))
+            expect(body.article.votes).toBe(105)
+            expect(body.article).toHaveProperty('article_img_url', expect.any(String))
+            expect(body.article).toHaveProperty('body')
+        })
     })
 })

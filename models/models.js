@@ -75,5 +75,24 @@ const selectAllArticles = (orderBy) => {
     })
   }
 
+const updateArticleVotes = (article_id, inc_votes) => {
+    console.log('model 1')
+    return db
+        .query(`
+            UPDATE articles 
+            SET votes = votes + $2
+            WHERE article_id = $1 
+            RETURNING *`,
+            [article_id, inc_votes]
+            )
+        .then(({rows}) => {
+            return rows[0]
+        })
+}
 
-module.exports = { selectTopics, selectArticleById, selectAllArticles, selectCommentsByArticle }
+
+module.exports = { selectTopics, 
+                   selectArticleById,
+                   selectAllArticles,
+                   selectCommentsByArticle,
+                   updateArticleVotes }
