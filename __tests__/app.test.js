@@ -89,4 +89,20 @@ describe('/api/articles/:article_id/comments', () => {
             expect(body.msg).toBeSortedBy('created_at', { descending: true })
         })
     })
+    test('GET:404 sends an appropriate and error message when given a valid but non-existent id', () => {
+        return request(app)
+          .get('/api/articles/999/comments')
+          .expect(404)
+          .then(({body}) => {
+            expect(body.msg).toBe('article does not exist');
+        });
+    })
+    test('GET:400 sends an appropriate and error message when given an invalid id', () => {
+        return request(app)
+          .get('/api/articles/abc/comments')
+          .expect(400)
+          .then(({body}) => {
+            expect(body.msg).toBe('Bad request');
+        });
+    })
 })
