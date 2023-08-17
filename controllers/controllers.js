@@ -38,6 +38,14 @@ const getArticles = (req, res, next) => {
         res.status(200).send({ articles })
     })
 }
+const validatePostComment = (req, res, next) => {
+    const { username, body} = req.body
+    if(!username || !body || typeof username !== 'string' || typeof body !== 'string') {
+        return res.status(400).send({ msg: 'invalid post object'})
+    }
+    next()
+}
+
 
 const postCommentToArticle = (req, res, next) => {
     const { username, body} = req.body
@@ -53,4 +61,4 @@ const postCommentToArticle = (req, res, next) => {
 }
 
 
-module.exports = { getTopics, getEndpoints, getArticleById, getArticles, postCommentToArticle }
+module.exports = { getTopics, getEndpoints, getArticleById, getArticles, postCommentToArticle, validatePostComment }

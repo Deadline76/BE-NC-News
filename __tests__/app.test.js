@@ -106,6 +106,7 @@ describe('POST: api/articles/:article_id/comments', () => {
             .send(newComment)
             .expect(201)
             .then(({body}) => {
+                console.log(body)
                 expect(body.comment).toHaveProperty('comment_id', expect.any(Number))
                 expect(body.comment.body).toBe('Amazing article!') 
                 expect(body.comment.article_id).toBe(1)
@@ -124,8 +125,33 @@ describe('POST: api/articles/:article_id/comments', () => {
           .send(newComment)
           .expect(404)
           .then(({body}) => {
-            console.log(body.msg)
             expect(body.msg).toBe('article does not exist');
+          });
+      });
+      test('POST:400 responds with an appropriate error message when provided with an invalid post object property', () => {
+        const newComment = {
+            user: 'rogersop',
+            text: 'Amazing article!'
+        }
+        return request(app)
+          .post('/api/articles/1/comments')
+          .send(newComment)
+          .expect(400)
+          .then(({body}) => {
+            expect(body.msg).toBe('invalid post object');
+          });
+      });
+      test('POST:400 responds with an appropriate error message when provided with an invalid post object value data type', () => {
+        const newComment = {
+            username: 1,
+            body: 4
+        }
+        return request(app)
+          .post('/api/articles/1/comments')
+          .send(newComment)
+          .expect(400)
+          .then(({body}) => {
+            expect(body.msg).toBe('invalid post object');
           });
       });
 })
