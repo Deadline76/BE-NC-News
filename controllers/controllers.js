@@ -2,7 +2,8 @@ const { selectTopics,
         selectArticleById, 
         selectAllArticles, 
         selectCommentsByArticle, 
-        updateArticleVotes } = require('../models/models.js')
+        updateArticleVotes,
+        deleteComment } = require('../models/models.js')
 const endpointsFile = require('../endpoints.json')
 
 
@@ -72,11 +73,23 @@ const patchArticleVotes = (req, res, next) => {
     
 }
 
+const removeComment = (req, res, next) => {
+    const {comment_id} = req.params
+
+    deleteComment(comment_id).then(() => {
+        res.status(204).send()
+    })
+    .catch(err => {
+        next(err)
+    })
+}
+
 
 module.exports = { getTopics, 
                    getEndpoints, 
                    getArticleById, 
                    getArticles, 
                    getCommentsByArticle, 
-                   patchArticleVotes }
+                   patchArticleVotes,
+                   removeComment }
 
