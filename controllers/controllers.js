@@ -41,14 +41,10 @@ const getArticles = (req, res, next) => {
 
 
 const postCommentToArticle = (req, res, next) => {
-    const { username, body} = req.body
+    const newComment = req.body
     const {article_id} = req.params
-
-    if(Object.keys(req.body).length !== 2 ) {
-        return res.status(400).send({ msg: 'invalid post object'})
-    }
-
-    insertComment(username, body, article_id).then((comment) => {
+    
+    insertComment(newComment, article_id).then((comment) => {
         
         res.status(201).send({ comment })
         })
