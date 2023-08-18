@@ -78,6 +78,7 @@ const selectAllArticles = (orderBy) => {
 const insertComment = (newComment, article_id) => {
     
     const {username, body} = newComment
+    
     return db
         .query(
             `INSERT INTO comments (author, body, article_id)
