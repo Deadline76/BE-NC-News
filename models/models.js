@@ -48,8 +48,26 @@ const selectCommentsByArticle = (article_id) => {
         })
     }
 
+const selectAllArticles = (request) => {
+    let sort_by = request.query.sort_by || 'created_at'
+    let order_by = request.query.order_by || 'desc'
+    let filter_by = request.query.filter_by
+    let whereString = ''
+    let queryTemplate = []
+    if(filter_by) {
+       whereString = `WHERE articles.topic = $1`
+       queryTemplate.push(filter_by)
+    }
+    
+    const acceptedSortBy = ['author', 'title', 'article_id', 'topic', 'created_at', 'votes', 'comment_count']
+    if (!acceptedSortBy.includes(sort_by)) {
+    return Promise.reject({status: 400, msg: 'Bad request'})
+    }
 
-const selectAllArticles = (orderBy) => {
+    const acceptedorderBy = ['asc', 'desc']
+    if (!acceptedorderBy.includes(order_by)) {
+    return Promise.reject({status: 400, msg: 'Bad request'})
+    }
     
     return db
         .query(`
@@ -64,9 +82,10 @@ const selectAllArticles = (orderBy) => {
             CAST(COUNT(comments.comment_id) AS INTEGER) AS comment_count
             FROM articles
             LEFT JOIN comments ON articles.article_id = comments.article_id
+            ${whereString}
             GROUP BY articles.article_id  
-            ORDER BY articles.${orderBy} DESC;
-            `)
+            ORDER BY articles.${sort_by} ${order_by};
+            `, queryTemplate)
         .then(({rows}) => {
       return rows
     })
