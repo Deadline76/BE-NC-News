@@ -44,7 +44,7 @@ const postCommentToArticle = (req, res, next) => {
     const { username, body} = req.body
     const {article_id} = req.params
 
-    if(!username || !body || typeof username !== 'string' || typeof body !== 'string' || Object.keys(req.body).length !== 2 ) {
+    if(Object.keys(req.body).length !== 2 ) {
         return res.status(400).send({ msg: 'invalid post object'})
     }
 

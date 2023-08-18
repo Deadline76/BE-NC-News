@@ -114,7 +114,7 @@ describe('POST: api/articles/:article_id/comments', () => {
                 expect(body.comment).toHaveProperty('created_at', expect.any(String))
             })
     })
-    test('POST:404 responds with an appropriate error message when provided with an valid but non existent article number', () => {
+    test('POST:400 responds with an appropriate error message when provided with an valid but non existent article number', () => {
         const newComment = {
             username: 'rogersop',
             body: 'Amazing article!'
@@ -122,9 +122,9 @@ describe('POST: api/articles/:article_id/comments', () => {
         return request(app)
           .post('/api/articles/999/comments')
           .send(newComment)
-          .expect(404)
+          .expect(400)
           .then(({body}) => {
-            expect(body.msg).toBe('Not Found');
+            expect(body.msg).toBe('Bad request');
           });
       });
       test('POST:400 responds with an appropriate error message when provided with an invalid post object property', () => {
@@ -137,7 +137,7 @@ describe('POST: api/articles/:article_id/comments', () => {
           .send(newComment)
           .expect(400)
           .then(({body}) => {
-            expect(body.msg).toBe('invalid post object');
+            expect(body.msg).toBe('Bad request');
           });
       });
       test('POST:400 responds with an appropriate error message when provided with an invalid post object value data type', () => {
@@ -150,7 +150,7 @@ describe('POST: api/articles/:article_id/comments', () => {
           .send(newComment)
           .expect(400)
           .then(({body}) => {
-            expect(body.msg).toBe('invalid post object');
+            expect(body.msg).toBe('Bad request');
           });
       });
       test('POST:400 responds with an appropriate error message when provided with an invalid post object extra property', () => {
@@ -167,7 +167,7 @@ describe('POST: api/articles/:article_id/comments', () => {
             expect(body.msg).toBe('invalid post object');
           });
       });
-      test('POST:404 responds with an appropriate error message when provided with an valid but non existent username', () => {
+      test('POST:400 responds with an appropriate error message when provided with an valid but non existent username', () => {
         const newComment = {
             username: 'David',
             body: 'Amazing article!'
@@ -175,9 +175,9 @@ describe('POST: api/articles/:article_id/comments', () => {
         return request(app)
           .post('/api/articles/1/comments')
           .send(newComment)
-          .expect(404)
+          .expect(400)
           .then(({body}) => {
-            expect(body.msg).toBe('Not Found');
+            expect(body.msg).toBe('Bad request');
           });
       });
 })
