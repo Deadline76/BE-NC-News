@@ -229,3 +229,85 @@ describe('/api/articles/:article_id/comments', () => {
         });
     })
 })
+describe('PATCH: /api/articles/:article_id', () => {
+    test('PATCH:200 returns an article object with the updated vote count', () => {
+      const voteUpdate = { inc_votes: 5}
+      return request(app)
+        .patch('/api/articles/1')
+        .send(voteUpdate)
+        .expect(200)
+        .then(({body}) => {
+            expect(body.article).toHaveProperty('author', expect.any(String))
+            expect(body.article).toHaveProperty('title', expect.any(String))
+            expect(body.article.article_id).toBe(1)
+            expect(body.article).toHaveProperty('topic', expect.any(String))
+            expect(body.article).toHaveProperty('created_at', expect.any(String))
+            expect(body.article.votes).toBe(105)
+            expect(body.article).toHaveProperty('article_img_url', expect.any(String))
+            expect(body.article).toHaveProperty('body')
+        })
+    })
+    test('PATCH:404 responds with an appropriate error message when provided with an valid but non existent article number', () => {
+        const voteUpdate = { inc_votes: 5}
+        return request(app)
+          .patch('/api/articles/999')
+          .send(voteUpdate)
+          .expect(404)
+          .then(({body}) => {
+            expect(body.msg).toBe('article does not exist')
+          })
+      })
+    test('PATCH:400 responds with an appropriate error message when provided with an invalid post object property', () => {
+        const voteUpdate = { votes: 5}
+        return request(app)
+          .patch('/api/articles/1')
+          .send(voteUpdate)
+          .expect(400)
+          .then(({body}) => {
+            expect(body.msg).toBe('Bad request')
+          })
+      })
+    test('PATCH:400 responds with an appropriate error message when provided with an invalid post object value data type', () => {
+        const voteUpdate = { inc_votes: 'five'}
+        return request(app)
+          .patch('/api/articles/1')
+          .send(voteUpdate)
+          .expect(400)
+          .then(({body}) => {
+            expect(body.msg).toBe('Bad request')
+          })
+      })
+    test('PATCH:400 responds with an appropriate error message when provided with an invalid post object extra property', () => {
+        const voteUpdate = { inc_votes: 'five', brand: 'nike'}
+        return request(app)
+          .patch('/api/articles/1')
+          .send(voteUpdate)
+          .expect(400)
+          .then(({body}) => {
+            expect(body.msg).toBe('Bad request')
+          })
+      })
+})
+describe('DELETE: /api/comments/:comment_id', () => {
+    test('DELETE:204 deletes the specified comment and sends no body back', () => {
+      return request(app)
+      .delete('/api/comments/1')
+      .expect(204)
+    })
+    test('DELETE:400 responds with an appropriate error message when given a non-existent id', () => {
+      return request(app)
+        .delete('/api/comments/999')
+        .expect(400)
+        .then(({body}) => {
+          expect(body.msg).toBe('comment does not exist');
+      })
+    })
+    test('DELETE:404 responds with an appropriate error message when given an invalid id', () => {
+      return request(app)
+        .delete('/api/comments/abc')
+        .expect(400)
+        .then(({body}) => {
+          expect(body.msg).toBe('Bad request');
+      })
+    })
+})
