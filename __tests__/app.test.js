@@ -94,8 +94,100 @@ describe('/api/articles', () => {
         })
       })
     
-  })
-  describe('/api/articles/:article_id/comments', () => {
+})
+describe('POST: api/articles/:article_id/comments', () => {
+    test('POST: 201, inserts new comment for an article into the database and sends back the added comment to the client', () => {
+        const newComment = {
+            username: 'rogersop',
+            body: 'Amazing article!'
+        }
+        return request(app)
+            .post('/api/articles/1/comments')
+            .send(newComment)
+            .expect(201)
+            .then(({body}) => {
+                expect(body.comment).toHaveProperty('comment_id', expect.any(Number))
+                expect(body.comment.body).toBe('Amazing article!') 
+                expect(body.comment.article_id).toBe(1)
+                expect(body.comment.author).toBe('rogersop')
+                expect(body.comment.votes).toBe(0)
+                expect(body.comment).toHaveProperty('created_at', expect.any(String))
+            })
+    })
+    test('POST:404 responds with an appropriate error message when provided with an valid but non existent article number', () => {
+        const newComment = {
+            username: 'rogersop',
+            body: 'Amazing article!'
+        }
+        return request(app)
+          .post('/api/articles/999/comments')
+          .send(newComment)
+          .expect(404)
+          .then(({body}) => {
+            expect(body.msg).toBe('Not Found');
+          });
+      });
+      test('POST:400 responds with an appropriate error message when provided with an invalid post object property', () => {
+        const newComment = {
+            user: 'rogersop',
+            text: 'Amazing article!'
+        }
+        return request(app)
+          .post('/api/articles/1/comments')
+          .send(newComment)
+          .expect(400)
+          .then(({body}) => {
+            expect(body.msg).toBe('Bad request');
+          });
+      });
+      test('POST:404 responds with an appropriate error message when provided with an invalid post object value data type', () => {
+        const newComment = {
+            username: 1,
+            body: 4
+        }
+        return request(app)
+          .post('/api/articles/1/comments')
+          .send(newComment)
+          .expect(404)
+          .then(({body}) => {
+            expect(body.msg).toBe('Not Found');
+          });
+      });
+      test('POST:201 responds with an appropriate error message when provided with an invalid post object extra property', () => {
+        const newComment = {
+            username: 'rogersop',
+            body: 'Amazing article!',
+            size: 5
+        }
+        return request(app)
+          .post('/api/articles/1/comments')
+          .send(newComment)
+          .expect(201)
+          .then(({body}) => {
+            expect(body.comment).toHaveProperty('comment_id', expect.any(Number))
+            expect(body.comment.body).toBe('Amazing article!') 
+            expect(body.comment.article_id).toBe(1)
+            expect(body.comment.author).toBe('rogersop')
+            expect(body.comment.votes).toBe(0)
+            expect(body.comment).toHaveProperty('created_at', expect.any(String))
+        
+          });
+      });
+      test('POST:404 responds with an appropriate error message when provided with an valid but non existent username', () => {
+        const newComment = {
+            username: 'David',
+            body: 'Amazing article!'
+        }
+        return request(app)
+          .post('/api/articles/1/comments')
+          .send(newComment)
+          .expect(404)
+          .then(({body}) => {
+            expect(body.msg).toBe('Not Found');
+          });
+      });
+})
+describe('/api/articles/:article_id/comments', () => {
     test('GET:200 sends an array of comments for a given article_id to the client', () => {
       return request(app)
         .get('/api/articles/1/comments')
