@@ -1,4 +1,3 @@
-const { selectTopics, selectArticleById, selectAllArticles, insertComment } = require('../models/models.js')
 const { selectTopics, selectArticleById, selectAllArticles, selectCommentsByArticle, insertComment } = require('../models/models.js')
 const endpointsFile = require('../endpoints.json')
 

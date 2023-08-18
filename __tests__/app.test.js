@@ -193,7 +193,6 @@ describe('/api/articles/:article_id/comments', () => {
         .get('/api/articles/1/comments')
         .expect(200)
         .then(({body}) => {
-            console.log(body)
             body.msg.forEach((comment) => {
                 expect(comment.article_id).toBe(1)
                 expect(comment).toHaveProperty('comment_id', expect.any(Number))
