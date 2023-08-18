@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
-const { getTopics, getEndpoints, getArticleById, getArticles, postCommentToArticle } = require('./controllers/controllers.js');
+const { getTopics, getEndpoints, getArticleById, getArticles, getCommentsByArticle, postCommentToArticle } = require('./controllers/controllers.js');
+
 
 app.use(express.json())
 
@@ -10,9 +11,12 @@ app.get('/api/topics', getTopics);
 
 app.get('/api/articles/:article_id', getArticleById)
 
+app.get('/api/articles/:article_id/comments', getCommentsByArticle)
+
 app.get('/api/articles', getArticles)
 
 app.post('/api/articles/:article_id/comments', postCommentToArticle)
+
 
 app.use((err, req, res, next) => {
     if (err.status === 404 || err.code === '23503' ) {
