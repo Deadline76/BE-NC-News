@@ -153,7 +153,7 @@ describe('POST: api/articles/:article_id/comments', () => {
             expect(body.msg).toBe('Not Found');
           });
       });
-      test('POST:400 responds with an appropriate error message when provided with an invalid post object extra property', () => {
+      test('POST:201 responds with an appropriate error message when provided with an invalid post object extra property', () => {
         const newComment = {
             username: 'rogersop',
             body: 'Amazing article!',
@@ -162,9 +162,15 @@ describe('POST: api/articles/:article_id/comments', () => {
         return request(app)
           .post('/api/articles/1/comments')
           .send(newComment)
-          .expect(400)
+          .expect(201)
           .then(({body}) => {
-            expect(body.msg).toBe('Bad request');
+            expect(body.comment).toHaveProperty('comment_id', expect.any(Number))
+            expect(body.comment.body).toBe('Amazing article!') 
+            expect(body.comment.article_id).toBe(1)
+            expect(body.comment.author).toBe('rogersop')
+            expect(body.comment.votes).toBe(0)
+            expect(body.comment).toHaveProperty('created_at', expect.any(String))
+        
           });
       });
       test('POST:404 responds with an appropriate error message when provided with an valid but non existent username', () => {

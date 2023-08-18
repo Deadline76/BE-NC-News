@@ -47,9 +47,6 @@ const selectAllArticles = (orderBy) => {
 
 const insertComment = (newComment, article_id) => {
     
-    if(Object.keys(newComment).length !== 2) {
-        return Promise.reject({status: 400})
-    }
     const {username, body} = newComment
     return db
         .query(
