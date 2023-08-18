@@ -6,6 +6,7 @@ const { getTopics,
         getArticles, 
         getCommentsByArticle, 
         patchArticleVotes,
+        postCommentToArticle,
         removeComment } = require('./controllers/controllers.js');
 
 app.use(express.json())
@@ -24,12 +25,12 @@ app.patch('/api/articles/:article_id', patchArticleVotes)
 
 app.delete('/api/comments/:comment_id', removeComment)
 
-
+app.post('/api/articles/:article_id/comments', postCommentToArticle)
 
 
 app.use((err, req, res, next) => {
-    if (err.status === 404) {
-        res.status(404).send({ msg: err.msg })
+    if (err.status === 404 || err.code === '23503' ) {
+        res.status(404).send({ msg: err.msg || 'Not Found' })
     } else {
         next(err)
     }

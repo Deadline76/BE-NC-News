@@ -3,6 +3,7 @@ const { selectTopics,
         selectAllArticles, 
         selectCommentsByArticle, 
         updateArticleVotes,
+        insertComment,
         deleteComment } = require('../models/models.js')
 const endpointsFile = require('../endpoints.json')
 
@@ -56,6 +57,19 @@ const getArticles = (req, res, next) => {
     })
 }
 
+const postCommentToArticle = (req, res, next) => {
+    const newComment = req.body
+    const {article_id} = req.params
+    
+    insertComment(newComment, article_id).then((comment) => {
+        
+        res.status(201).send({ comment })
+        })
+        .catch(err => {
+            next(err)
+        })
+}
+
 const patchArticleVotes = (req, res, next) => {
     const {article_id} = req.params
     const {inc_votes} = req.body
@@ -65,8 +79,7 @@ const patchArticleVotes = (req, res, next) => {
     })
     .catch(err => {
         next(err)
-      })
-    
+      })    
 }
 
 const removeComment = (req, res, next) => {
@@ -87,5 +100,5 @@ module.exports = { getTopics,
                    getArticles, 
                    getCommentsByArticle, 
                    patchArticleVotes,
+                   postCommentToArticle,
                    removeComment }
-
