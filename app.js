@@ -7,6 +7,7 @@ const { getTopics,
         getCommentsByArticle, 
         patchArticleVotes,
         postCommentToArticle,
+        getUsers,
         removeComment } = require('./controllers/controllers.js');
 
 app.use(express.json())
@@ -21,11 +22,14 @@ app.get('/api/articles/:article_id/comments', getCommentsByArticle)
 
 app.get('/api/articles', getArticles)
 
+app.get('/api/users', getUsers)
+
 app.patch('/api/articles/:article_id', patchArticleVotes)
 
 app.delete('/api/comments/:comment_id', removeComment)
 
 app.post('/api/articles/:article_id/comments', postCommentToArticle)
+
 
 
 app.use((err, req, res, next) => {

@@ -75,6 +75,14 @@ const selectAllArticles = (orderBy) => {
     })
   }
 
+const selectUsers = () => {
+    
+    return db
+        .query('SELECT * FROM users')
+        .then(({rows}) => {
+            return rows
+      
+
 const insertComment = (newComment, article_id) => {
     
     const {username, body} = newComment
@@ -134,4 +142,5 @@ module.exports = { selectTopics,
                    selectCommentsByArticle,
                    updateArticleVotes,
                    insertComment,
+                   selectUsers,
                    deleteComment }

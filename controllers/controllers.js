@@ -4,6 +4,7 @@ const { selectTopics,
         selectCommentsByArticle, 
         updateArticleVotes,
         insertComment,
+        selectUsers,
         deleteComment } = require('../models/models.js')
 const endpointsFile = require('../endpoints.json')
 
@@ -57,6 +58,13 @@ const getArticles = (req, res, next) => {
     })
 }
 
+const getUsers = (req, res, next) => {
+
+    selectUsers ().then((users) => {
+        res.status(200).send({users})
+    })
+} 
+
 const postCommentToArticle = (req, res, next) => {
     const newComment = req.body
     const {article_id} = req.params
@@ -101,4 +109,5 @@ module.exports = { getTopics,
                    getCommentsByArticle, 
                    patchArticleVotes,
                    postCommentToArticle,
+                   getUsers,
                    removeComment }

@@ -202,6 +202,7 @@ describe('/api/articles/:article_id/comments', () => {
                 expect(comment).toHaveProperty('body', expect.any(String))
                 })
             expect(body.msg).toBeSortedBy('created_at', { descending: true })
+          }
         })
     })
     test('GET:200 sends an empty array if the article has no comments', () => {
@@ -228,6 +229,20 @@ describe('/api/articles/:article_id/comments', () => {
             expect(body.msg).toBe('Bad request');
         });
     })
+})
+describe('/api/users', () => {
+  test('GET:200 sends an array of all user objects', () => {
+    return request(app)
+      .get('/api/users')
+      .expect(200)
+      .then(({body}) => {
+          expect(body.users.length).toBe(4)
+          body.users.forEach((user) => {
+              expect(user).toHaveProperty('username', expect.any(String))
+              expect(user).toHaveProperty('name', expect.any(String)) 
+              expect(user).toHaveProperty('avatar_url', expect.any(String))
+              })
+      })
 })
 describe('PATCH: /api/articles/:article_id', () => {
     test('PATCH:200 returns an article object with the updated vote count', () => {
