@@ -172,7 +172,7 @@ describe('PATCH: /api/articles/:article_id', () => {
           .send(voteUpdate)
           .expect(400)
           .then(({body}) => {
-            expect(body.msg).toBe('invalid post object')
+            expect(body.msg).toBe('Bad request')
           })
       })
     test('PATCH:400 responds with an appropriate error message when provided with an invalid post object value data type', () => {
@@ -182,7 +182,7 @@ describe('PATCH: /api/articles/:article_id', () => {
           .send(voteUpdate)
           .expect(400)
           .then(({body}) => {
-            expect(body.msg).toBe('invalid post object')
+            expect(body.msg).toBe('Bad request')
           })
       })
     test('PATCH:400 responds with an appropriate error message when provided with an invalid post object extra property', () => {
@@ -192,7 +192,7 @@ describe('PATCH: /api/articles/:article_id', () => {
           .send(voteUpdate)
           .expect(400)
           .then(({body}) => {
-            expect(body.msg).toBe('invalid post object')
+            expect(body.msg).toBe('Bad request')
           })
       })
 })
@@ -202,10 +202,10 @@ describe('DELETE: /api/comments/:comment_id', () => {
       .delete('/api/comments/1')
       .expect(204)
     })
-    test('DELETE:404 responds with an appropriate error message when given a non-existent id', () => {
+    test('DELETE:400 responds with an appropriate error message when given a non-existent id', () => {
       return request(app)
         .delete('/api/comments/999')
-        .expect(404)
+        .expect(400)
         .then(({body}) => {
           expect(body.msg).toBe('comment does not exist');
       })

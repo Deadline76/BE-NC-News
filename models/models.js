@@ -77,6 +77,9 @@ const selectAllArticles = (orderBy) => {
 
 const updateArticleVotes = (article_id, inc_votes) => {
     
+    if(!inc_votes) {
+        return Promise.reject({status: 400, msg: 'Bad request'})
+    }
     return db
         .query(`
             UPDATE articles 
@@ -102,7 +105,7 @@ const deleteComment = (comment_id) => {
         `, [comment_id])
         .then(({rows}) => {
             if(rows.length === 0) {
-                return Promise.reject({status: 404, msg: 'comment does not exist'})
+                return Promise.reject({status: 400, msg: 'comment does not exist'})
             }
         })
 }
