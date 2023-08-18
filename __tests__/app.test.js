@@ -93,7 +93,56 @@ describe('/api/articles', () => {
           expect(body.articles).toBeSortedBy('created_at', { descending: true })
         })
       })
+    test('GET:200 sends an array of article objects to the client sorted by a column and order', () => {
+        return request(app)
+          .get('/api/articles?sort_by=title&order_by=asc')
+          .expect(200)
+          .then(({body}) => {
+            expect(body.articles.length).toBe(13)
+            body.articles.forEach(article => {
+              expect(article).toHaveProperty('author', expect.any(String))
+              expect(article).toHaveProperty('title', expect.any(String))
+              expect(article).toHaveProperty('article_id', expect.any(Number))
+              expect(article).toHaveProperty('topic', expect.any(String))
+              expect(article).toHaveProperty('created_at', expect.any(String))
+              expect(article).toHaveProperty('votes', expect.any(Number))
+              expect(article).toHaveProperty('article_img_url', expect.any(String))
+              expect(article).toHaveProperty('comment_count', expect.any(Number))
+              expect(article).not.toHaveProperty('body')
     
+            })
+            expect(body.articles).toBeSortedBy('title', { ascending: true })
+          })
+        })
+    test('GET:200 sends an array of article objects to the client filtered and sorted by a column and order', () => {
+        return request(app)
+            .get('/api/articles?sort_by=title&order_by=asc&filter_by=cats')
+            .expect(200)
+            .then(({body}) => {
+              expect(body.articles.length).toBe(1)
+              body.articles.forEach(article => {
+                expect(article).toHaveProperty('author', expect.any(String))
+                expect(article).toHaveProperty('title', expect.any(String))
+                expect(article).toHaveProperty('article_id', expect.any(Number))
+                expect(article.topic).toBe('cats')
+                expect(article).toHaveProperty('created_at', expect.any(String))
+                expect(article).toHaveProperty('votes', expect.any(Number))
+                expect(article).toHaveProperty('article_img_url', expect.any(String))
+                expect(article).toHaveProperty('comment_count', expect.any(Number))
+                expect(article).not.toHaveProperty('body')
+      
+              })
+              expect(body.articles).toBeSortedBy('title', { ascending: true })
+            })
+        })
+    test('GET:400 sends an appropriate and error message when given an invalid query param', () => {
+        return request(app)
+            .get('/api/articles?order_by=hats')
+            .expect(400)
+            .then(({body}) => {
+               expect(body.msg).toBe('Bad request');
+        });
+    })
 })
 describe('POST: api/articles/:article_id/comments', () => {
     test('POST: 201, inserts new comment for an article into the database and sends back the added comment to the client', () => {

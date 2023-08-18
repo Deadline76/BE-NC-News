@@ -47,14 +47,12 @@ const getCommentsByArticle = (req, res, next) => {
  }
 
 const getArticles = (req, res, next) => {
-    const orderBy = 'created_at'
+    const request = req
 
-    selectAllArticles(orderBy).then(articles => {
-        
+    selectAllArticles(request).then(articles => {
         res.status(200).send({ articles })
     })
   .catch(err => {
-    console.log(err)
       next(err)
     })
 }
