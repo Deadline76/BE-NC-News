@@ -1,4 +1,4 @@
-const { selectTopics, selectArticleById, selectAllArticles, selectCommentsByArticle } = require('../models/models.js')
+const { selectTopics, selectArticleById, selectAllArticles, selectCommentsByArticle, selectUsers } = require('../models/models.js')
 const endpointsFile = require('../endpoints.json')
 
 
@@ -51,8 +51,14 @@ const getArticles = (req, res, next) => {
     })
 }
 
+const getUsers = (req, res, next) => {
+
+    selectUsers ().then((users) => {
+        res.status(200).send({users})
+    })
+} 
 
 
 
-module.exports = { getTopics, getEndpoints, getArticleById, getArticles, getCommentsByArticle }
+module.exports = { getTopics, getEndpoints, getArticleById, getArticles, getCommentsByArticle, getUsers }
 

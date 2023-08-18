@@ -75,5 +75,14 @@ const selectAllArticles = (orderBy) => {
     })
   }
 
+  const selectUsers = () => {
+    
+    return db
+        .query('SELECT * FROM users')
+        .then(({rows}) => {
+            return rows
+        })
+}
 
-module.exports = { selectTopics, selectArticleById, selectAllArticles, selectCommentsByArticle }
+
+module.exports = { selectTopics, selectArticleById, selectAllArticles, selectCommentsByArticle, selectUsers }

@@ -101,7 +101,7 @@ describe('/api/articles', () => {
         .get('/api/articles/1/comments')
         .expect(200)
         .then(({body}) => {
-            console.log(body)
+            
             body.msg.forEach((comment) => {
                 expect(comment.article_id).toBe(1)
                 expect(comment).toHaveProperty('comment_id', expect.any(Number))
@@ -137,4 +137,19 @@ describe('/api/articles', () => {
             expect(body.msg).toBe('Bad request');
         });
     })
+})
+describe('/api/users', () => {
+  test('GET:200 sends an array of all user objects', () => {
+    return request(app)
+      .get('/api/users')
+      .expect(200)
+      .then(({body}) => {
+          expect(body.users.length).toBe(4)
+          body.users.forEach((user) => {
+              expect(user).toHaveProperty('username', expect.any(String))
+              expect(user).toHaveProperty('name', expect.any(String)) 
+              expect(user).toHaveProperty('avatar_url', expect.any(String))
+              })
+      })
+  })
 })
