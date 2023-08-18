@@ -75,14 +75,72 @@ const selectAllArticles = (orderBy) => {
     })
   }
 
-  const selectUsers = () => {
+const selectUsers = () => {
     
     return db
         .query('SELECT * FROM users')
         .then(({rows}) => {
             return rows
+      
+
+const insertComment = (newComment, article_id) => {
+    
+    const {username, body} = newComment
+    
+    return db
+        .query(
+            `INSERT INTO comments (author, body, article_id)
+             VALUES
+             ($1, $2, $3)
+             RETURNING *`,
+             [username, body, article_id]
+        )
+        .then(({rows}) => {
+            return rows[0]
+        })
+}
+
+const updateArticleVotes = (article_id, inc_votes) => {
+    
+    if(!inc_votes) {
+        return Promise.reject({status: 400, msg: 'Bad request'})
+    }
+    return db
+        .query(`
+            UPDATE articles 
+            SET votes = votes + $2
+            WHERE article_id = $1 
+            RETURNING *`,
+            [article_id, inc_votes]
+            )
+        .then(({rows}) => {
+            if (rows.length === 0) {
+                return Promise.reject({status: 404, msg: 'article does not exist'})
+            }
+            return rows[0]
+        })
+}
+
+const deleteComment = (comment_id) => {
+    return db
+        .query(`
+        DELETE FROM comments
+        WHERE comment_id = $1
+        RETURNING *
+        `, [comment_id])
+        .then(({rows}) => {
+            if(rows.length === 0) {
+                return Promise.reject({status: 400, msg: 'comment does not exist'})
+            }
         })
 }
 
 
-module.exports = { selectTopics, selectArticleById, selectAllArticles, selectCommentsByArticle, selectUsers }
+module.exports = { selectTopics, 
+                   selectArticleById,
+                   selectAllArticles,
+                   selectCommentsByArticle,
+                   updateArticleVotes,
+                   insertComment,
+                   selectUsers,
+                   deleteComment }
