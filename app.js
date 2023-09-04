@@ -10,6 +10,10 @@ const { getTopics,
         getUsers,
         removeComment } = require('./controllers/controllers.js');
 
+const cors = require('cors')
+
+app.use(cors())
+
 app.use(express.json())
 
 app.get('/api', getEndpoints)
