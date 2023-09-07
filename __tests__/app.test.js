@@ -95,7 +95,7 @@ describe('/api/articles', () => {
       })
     test('GET:200 sends an array of article objects to the client sorted by a column and order', () => {
         return request(app)
-          .get('/api/articles?sort_by=title&order_by=asc')
+          .get('/api/articles?sort_by=comment_count&order_by=asc')
           .expect(200)
           .then(({body}) => {
             expect(body.articles.length).toBe(13)
@@ -111,7 +111,7 @@ describe('/api/articles', () => {
               expect(article).not.toHaveProperty('body')
     
             })
-            expect(body.articles).toBeSortedBy('title', { ascending: true })
+            expect(body.articles).toBeSortedBy('comment_count', { ascending: true })
           })
         })
     test('GET:200 sends an array of article objects to the client filtered and sorted by a column and order', () => {

@@ -54,6 +54,14 @@ const selectAllArticles = (request) => {
     let filter_by = request.query.filter_by
     let whereString = ''
     let queryTemplate = []
+
+    let orderByClause = '';
+    if (sort_by === 'comment_count') {
+        orderByClause = `ORDER BY ${sort_by} ${order_by}`;
+    } else {
+        orderByClause = `ORDER BY articles.${sort_by} ${order_by}`;
+    }
+
     if(filter_by) {
        whereString = `WHERE articles.topic = $1`
        queryTemplate.push(filter_by)
@@ -84,7 +92,7 @@ const selectAllArticles = (request) => {
             LEFT JOIN comments ON articles.article_id = comments.article_id
             ${whereString}
             GROUP BY articles.article_id  
-            ORDER BY articles.${sort_by} ${order_by};
+            ${orderByClause};
             `, queryTemplate)
         .then(({rows}) => {
       return rows
